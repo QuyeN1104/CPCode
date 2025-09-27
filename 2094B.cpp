@@ -3,7 +3,9 @@ using namespace std;
 
 
 void sol(){
-    
+    int n, m, l, r;
+    cin >> n >> m >> l >> r;
+    cout << l << " " << l + m << '\n';
 }
 
 int main(){
