@@ -6,10 +6,13 @@ using namespace std;
 const int maxn = 2e5+1;
 vector<int> dict(maxn, (int)1e9);
 vector<int> parent(maxn, -1);
+vector<int> tin(maxn, -1);
+vector<int> tout(maxn, -1);
 vector<int> visited(maxn, false);
 
 int n = 9;
 
+int cnt = 1;
 vector<vector<int>> create_adjacent_matrix(){
     vector<vector<int>> adj;
     adj.assign(n, {});
@@ -46,9 +49,47 @@ void bfs(int v, vector<vector<int>> adj){
     }
 }
 
-void dfs(int v, vector<vector<int>> adj = create_adjacent_matrix()){
-    
+void dfs(int v,int par, vector<vector<int>> adj = create_adjacent_matrix()){
+    tin[v] = cnt++;
+    visited[v] = true;
+    parent[v] = par;
+    for(auto s: adj[v]){
+        if(!visited[s]){
+            dfs(s, v, adj);
+        }
+    }
+    tout[v] = cnt++;
 }
+
+// DSU
+struct DSU {
+    vector<int> parent, sz;
+    DSU(int n){
+        parent.resize(n+1);
+        sz.assign(n+1, 1);
+        for(int i = 1; i <= n; i++){
+            parent[i] = i;
+        }
+    }
+    
+    int find(int x){
+        if(x==parent[x]) return x;
+        return parent[x] = find(parent[x]);
+    }
+
+    void unite(int a, int b){
+        a=find(a); b=find(b);
+        if(a != b){
+            if(sz[a] < sz[b]) swap(a, b);
+            parent[b] = parent[a];
+            sz[a] += sz[b];
+        }
+    }
+
+};
+
+
+
 
 int main(){
     ios::sync_with_stdio(false);
@@ -65,8 +106,29 @@ int main(){
     }
     cout << '\n';
 
-    bfs(1, adj);
+    // bfs(1, adj);
+    // for(int i = 1; i < n; i++){
+    //     cout << i << ' ' << dict[i] << '\n';
+    // }
+
+    cout << "-------------" << "DFS" << "-----------------\n";
+    dfs(1, 0);
     for(int i = 1; i < n; i++){
-        cout << i << ' ' << dict[i] << '\n';
+        cout << i << " " << tin[i] << " " << tout[i] << endl;
     }
+
+    cout << "-------------------DSU-----------------\n";
+    DSU dsu(8);
+    for(int i = 1; i < n; i++){
+        for(auto j: adj[i]){
+            if (i < j){
+                dsu.unite(i, j);
+            }
+        }
+    }
+    
+    for(int i = 1; i < n; i++){
+        cout << dsu.parent[i] << " " <<  dsu.sz[i] << endl;
+    }
+
 }
