@@ -46,6 +46,10 @@ void bfs(int v, vector<vector<int>> adj){
     }
 }
 
+void dfs(int v, vector<vector<int>> adj = create_adjacent_matrix()){
+    
+}
+
 int main(){
     ios::sync_with_stdio(false);
     cin.tie(nullptr); cout.tie(nullptr);
