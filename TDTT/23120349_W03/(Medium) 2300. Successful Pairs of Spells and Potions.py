@@ -16,4 +16,5 @@ class Solution:
                     l = m + 1
             
             ans[i] = res 
+            
         return ans
